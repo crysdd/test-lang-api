@@ -65,6 +65,11 @@ class LangsTest extends TestCase
             'key' => "register_success",
             'text' => "registration completed successfully",
         ]);
-
+        $response = $this->get(route('texts_lang', ['fu']));
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'status' => "error",
+            'message' => "Texts for this lang not found",
+        ]);
     }
 }
