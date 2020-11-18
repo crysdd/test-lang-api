@@ -30,4 +30,41 @@ class LangsTest extends TestCase
             'name' => 'Russian',
         ]);
     }
+
+    /**
+     * Test all languages
+     *
+     * @return void
+     */
+    public function testAllTexts()
+    {
+        $response = $this->get(route('all_texts'));
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'lang' => "EN",
+            'key' => "register_success",
+            'text' => "registration completed successfully",
+        ]);
+        $response->assertJsonFragment([
+            'lang' => "AR",
+            'key' => "enter_site",
+            'text' => "أدخل الموقع",
+        ]);
+    }
+    /**
+     * Test current lang
+     *
+     * @return void
+     */
+    public function testTextsLang()
+    {
+        $response = $this->get(route('texts_lang', ['en']));
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'lang' => "EN",
+            'key' => "register_success",
+            'text' => "registration completed successfully",
+        ]);
+
+    }
 }

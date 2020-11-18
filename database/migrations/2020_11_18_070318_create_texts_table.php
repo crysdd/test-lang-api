@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLangsTable extends Migration
+class CreateTextsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateLangsTable extends Migration
      */
     public function up()
     {
-        Schema::create('langs', function (Blueprint $table) {
-            $table->string('code')->unique();
-            $table->string('name');
+        Schema::create('texts', function (Blueprint $table) {
+            $table->id();
+            $table->string('lang');
+            $table->string('key');
+            $table->string('text');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateLangsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('langs');
+        Schema::dropIfExists('texts');
     }
 }

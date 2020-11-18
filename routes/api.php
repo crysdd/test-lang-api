@@ -15,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'langs'], function () {
-    Route::get('/', 'LangController@getLangsList')->name('langs');
-});
+Route::get('/langs', 'LangController@getLangsList')->name('langs');
+Route::get('/texts', 'LangController@getAllTexts')->name('all_texts');
+Route::get('/texts/{lang}', 'LangController@getLangText')->name('texts_lang');
