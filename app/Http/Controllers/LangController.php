@@ -6,6 +6,7 @@ use App\Models\Lang;
 use App\Models\Text;
 use App\Models\TextKey;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -33,7 +34,11 @@ class LangController extends Controller
      */
     public function getAllTexts()
     {
-        $texts = Text::select('lang', 'key', 'text')->get()->all();
+        $texts = DB::table('langs as l')
+        ->crossJoin('text_keys as k')
+        ->leftJoin('texts as t', [['l.code', '=', 't.lang'], ['t.key', '=', 'k.key']])
+        ->select('l.code as lang', 'k.key', 't.text')
+        ->get();
         if ( count($texts) == 0 ) {
             return response()->json(['status' => 'error', 'message' => 'Texts not found']);
         }

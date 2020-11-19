@@ -65,5 +65,14 @@ class DatabaseSeeder extends Seeder
         TextKey::create([
                 'key' => 'enter_site',
         ]);
+        TextKey::create([
+                'key' => 'test_case',
+        ]);
+
+        Text::create([
+            'lang' => 'EN',
+            'key' => 'test_case',
+            'text' => 'test case',
+        ]);
     }
 }
