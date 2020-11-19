@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Lang;
 use App\Models\Text;
+use App\Models\TextKey;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class LangController extends Controller
 {
@@ -54,5 +56,27 @@ class LangController extends Controller
         }
 
         return response()->json(['status' => 'success', 'texts' => $texts]);;
+    }
+
+    /**
+     * Add key
+     *
+     * @param Request $request
+     * @return response
+     */
+    public function addKey(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'key' => 'required|string|unique:text_keys,key',
+        ]);
+        $errors = $validator->errors();
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $errors->first('key')]);
+        }
+        $key = new TextKey();
+        $key->key = $request->key;
+        $key->save();
+
+        return response()->json(['status' => 'success', 'added' => $request->key]);
     }
 }
