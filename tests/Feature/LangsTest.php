@@ -99,4 +99,37 @@ class LangsTest extends TestCase
             'message' => 'The key field is required.',
         ]);
     }
+
+    public function testAddChangeText()
+    {
+        $response = $this->post(route('text'));
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'status' => 'error',
+            'The lang field is required.',
+        ]);
+        $response->assertJsonFragment([
+            'status' => 'error',
+            'The key field is required.',
+        ]);
+        $response->assertJsonFragment([
+            'status' => 'error',
+            'The text field is required.',
+        ]);
+        $response = $this->post(route('text', ['lang' => 'en', 'key' => 'test', 'text' => 'test case']));
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'status' => 'error',
+            'The selected key is invalid.', // Because DatabaseTransactions was clear all changes for all test.
+        ]);
+        $response = $this->post(route('add_key', ['key' => 'test']));
+        $response = $this->post(route('text', ['lang' => 'en', 'key' => 'test', 'text' => 'test case']));
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'status' => 'success',
+            'key' => 'test',
+            'lang' => 'EN',
+            'text' => 'test case',
+        ]);
+    }
 }

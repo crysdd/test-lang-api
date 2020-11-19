@@ -19,3 +19,4 @@ Route::get('/langs', 'LangController@getLangsList')->name('langs');
 Route::get('/texts', 'LangController@getAllTexts')->name('all_texts');
 Route::get('/texts/{lang}', 'LangController@getLangText')->name('texts_lang');
 Route::post('/add/key', 'LangController@addKey')->name('add_key');
+Route::post('/text', 'LangController@addChangeText')->name('text');

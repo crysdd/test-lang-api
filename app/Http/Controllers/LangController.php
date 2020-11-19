@@ -7,6 +7,7 @@ use App\Models\Text;
 use App\Models\TextKey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class LangController extends Controller
 {
@@ -78,5 +79,43 @@ class LangController extends Controller
         $key->save();
 
         return response()->json(['status' => 'success', 'added' => $request->key]);
+    }
+
+    /**
+     * Add and change texts
+     *
+     * @param Request $request
+     * @return response
+     */
+    public function addChangeText(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'lang' => 'required|string|exists:langs,code',
+            'key' => 'required|string|exists:text_keys,key',
+            'text' => 'required|string'
+        ]);
+        $errors = $validator->errors();
+        if($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $errors->all()]);
+        }
+        $text = Text::where('lang', Str::upper($request->lang))->where('key', $request->key)->first();
+        // dd($text);
+        if ($text instanceof Text) {
+            $text->text = $request->text;
+        }else{
+            $text = new Text();
+            $text->lang = Str::upper($request->lang);
+            $text->key = $request->key;
+            $text->text = $request->text;
+        }
+        $text->save();
+
+        return response()->json([
+            'status' => 'success', 'text' => [
+                'lang' => $text->lang,
+                'key' => $text->key,
+                'text' => $text->text
+                ]
+            ]);
     }
 }
