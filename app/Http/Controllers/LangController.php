@@ -35,10 +35,10 @@ class LangController extends Controller
     public function getAllTexts()
     {
         $texts = DB::table('langs as l')
-        ->crossJoin('text_keys as k')
-        ->leftJoin('texts as t', [['l.code', '=', 't.lang'], ['t.key', '=', 'k.key']])
-        ->select('l.code as lang', 'k.key', 't.text')
-        ->get();
+                    ->crossJoin('text_keys as k')
+                    ->leftJoin('texts as t', [['l.code', '=', 't.lang'], ['t.key', '=', 'k.key']])
+                    ->select('l.code as lang', 'k.key', 't.text')
+                    ->get();
         if ( count($texts) == 0 ) {
             return response()->json(['status' => 'error', 'message' => 'Texts not found']);
         }
@@ -56,7 +56,13 @@ class LangController extends Controller
      */
     public function getLangText($lang)
     {
-        $texts = Text::select('lang', 'key', 'text')->where('lang', $lang)->get();
+        // $texts = Text::select('lang', 'key', 'text')->where('lang', $lang)->get();
+        $texts = DB::table('langs as l')
+                    ->crossJoin('text_keys as k')
+                    ->leftJoin('texts as t', [['l.code', '=', 't.lang'], ['t.key', '=', 'k.key']])
+                    ->select('l.code as lang', 'k.key', 't.text')
+                    ->where('l.code', $lang)
+                    ->get();
         if ( count($texts) == 0 ) {
             return response()->json(['status' => 'error', 'message' => 'Texts for this lang not found']);
         }
@@ -92,7 +98,7 @@ class LangController extends Controller
      * @param Request $request
      * @return response
      */
-    public function addChangeText(Request $request)
+    public function addOrChangeText(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'lang' => 'required|string|exists:langs,code',
