@@ -20,3 +20,7 @@ Route::get('/texts', 'LangController@getAllTexts')->name('all_texts');
 Route::get('/texts/{lang}', 'LangController@getLangText')->name('texts_lang');
 Route::post('/add/key', 'LangController@addKey')->name('add_key');
 Route::post('/text', 'LangController@addOrChangeText')->name('text');
+
+Route::fallback(function () {
+    return response()->json(['status' => 'error', 'message' => 'This metod not supported!']);
+});
