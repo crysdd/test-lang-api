@@ -28,14 +28,14 @@ Launch web-server:
 
 * Adding new keyword:
 
-`POST /api/key`
+`POST /api/add/key`
 ```
 key = keyword
 ```
 
 * Adding text for keyword:
 
-`POST /api/key`
+`POST /api/text`
 
 ```
 lang = {en|ru|ar}
